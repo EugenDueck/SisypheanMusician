@@ -1,12 +1,21 @@
 #!/bin/bash
 
-IN_FILE=$1
-OUT_FILE_PREFIX=$2
-OUT_FOLDER=$(dirname "$OUT_FILE")
+IN_FOLDER=$1
+OUT_FOLDER=$2
+YEAR=$3
+MONTH=$4
+DAY=$5
+DATE=$3$4$5
+DATE_SLASH=$3/$4/$5
+
+IN_FILE=$IN_FOLDER/$DATE.mid
+OUT_FILE_PREFIX=$OUT_FOLDER/$DATE
 OUT_AUDIO=${OUT_FILE_PREFIX}.mp3
 OUT_IMAGE=${OUT_FILE_PREFIX}.png
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
 
+set -x
+
 timidity "$IN_FILE" -Ow -o - | ffmpeg -y -loglevel warning -i - -acodec libmp3lame -ab 64k "$OUT_AUDIO"
-convert -pointsize 960 -font Noto-Mono label:"$(date +%Y/%m/%d)" "$OUT_IMAGE"
+convert -pointsize 960 -font Noto-Mono label:"$DATE_SLASH" "$OUT_IMAGE"
 ffmpeg -y -loglevel warning -loop 1 -i "$OUT_IMAGE" -i "$OUT_AUDIO" -c:a copy -c:v libx264 -shortest "$OUT_VIDEO"

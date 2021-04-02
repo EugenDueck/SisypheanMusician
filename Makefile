@@ -20,6 +20,9 @@ record-midi:
 	mkdir -p $(IN_DIR)
 	arecordmidi -p 20:0 $(IN_MID_FILE)
 
+play-midi:
+	timidity $(IN_MID_FILE)
+
 render:
 	mkdir -p $(OUT_DIR)
 	docker run -it --rm -v $(CURDIR):/work -w /work a_tune_a_day:$(DOCKER_LATEST_TAG) render $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)

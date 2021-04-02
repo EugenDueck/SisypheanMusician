@@ -4,7 +4,7 @@ MONTH = $(shell date +%m)
 DAY = $(shell date +%d)
 
 IN_DIR = src/$(YEAR)/$(MONTH)/
-IN_MID_FILE = $(MID_DIR)/$(DATE).mid
+IN_MID_FILE = $(IN_DIR)/$(DATE).mid
 OUT_DIR = bin/$(YEAR)/$(MONTH)/
 
 DOCKER_LATEST_FILE = docker/latest

@@ -22,7 +22,10 @@ fluidsynth -nli -r 48000 -o synth.cpu-cores=2 -T oga -F "$OUT_AUDIO" /usr/share/
 
 # render midi to video
 X :0 -config /build/video-dummy.conf &
-DISPLAY=:0 /build/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 3 --export "$OUT_VIDEO_ONLY"  --format MPEG4
+DISPLAY=:0 /build/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 3 --export "$OUT_VIDEO_ONLY" --format MPEG4
 
-# combine video and audio
-ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_AUDIO" -c copy "$OUT_VIDEO"
+# create timestamp watermark
+convert -pointsize 64 -font DejaVu-Sans-Bold -background none -fill white label:"$DATE_SLASH" "$OUT_IMAGE"
+
+# combine video+watermark and audio
+ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO" -codec:a copy "$OUT_VIDEO"

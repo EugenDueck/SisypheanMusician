@@ -33,6 +33,7 @@ The motivation to start the "a tune a day" project was to improve my musical ski
 ## Hardware
 
 - [Any old laptop will do](https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_6th_Gen/ThinkPad_X1_Carbon_6th_Gen_Spec.PDF)
+  - but rendering of midi -> mp4 and consumes lots and lots of CPU (and perhaps GPU?) and is still slow
 - [AKAI Professional MPK Mini Play](https://www.akaipro.com/mpk-mini-play-mpkminiplay)
 - [Roland FP-7F](https://www.roland.com/global/products/fp-7f/)
 
@@ -47,3 +48,8 @@ The motivation to start the "a tune a day" project was to improve my musical ski
 - [MIDIVisualizer](https://github.com/kosua20/MIDIVisualizer)
 - [MuseScore SoundFont MuseScore_General_Full.sf2](https://musescore.org/en/handbook/3/soundfonts-and-sfz-files)
 - [timidity](http://timidity.sourceforge.net/)
+
+# Notes
+
+## 2021/4/3: reverting to mp3, after trying ogg, because ogg audio does not play in videos uploaded to Telegram on the 2 Huawei mobile phones I tested
+- also reverting from 48kHz to 44.1kHz, because ffmpeg conversion (when using `-f s32le`?) seems to assume 44.1kHz, and the a 48kHz wav rendered to mp3 gets longer (and video / audio gets out of sync, and I guess the audio pitch drops as well)

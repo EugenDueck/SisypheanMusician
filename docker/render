@@ -10,7 +10,7 @@ DATE_SLASH=$3/$4/$5
 
 IN_FILE=$IN_FOLDER/$DATE.mid
 OUT_FILE_PREFIX=$OUT_FOLDER/$DATE
-OUT_AUDIO=${OUT_FILE_PREFIX}.ogg
+OUT_AUDIO=${OUT_FILE_PREFIX}.mp3
 OUT_IMAGE=${OUT_FILE_PREFIX}.png
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
 OUT_VIDEO_ONLY=${OUT_FILE_PREFIX}.vid.mp4
@@ -18,7 +18,7 @@ OUT_VIDEO_ONLY=${OUT_FILE_PREFIX}.vid.mp4
 set -x
 
 # render midi to audio
-fluidsynth -nli -r 48000 -o synth.cpu-cores=2 -T oga -F "$OUT_AUDIO" /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE"
+fluidsynth -nli -r 44100 -o synth.cpu-cores=2 -T raw -F- /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE" | ffmpeg -y -loglevel warning -f s32le -i - "$OUT_AUDIO"
 
 # render midi to video
 X :0 -config /build/video-dummy.conf &

@@ -6,9 +6,9 @@ DATE := $(YEAR)$(MONTH)$(DAY)
 DATE_SLASH := $(YEAR)/$(MONTH)/$(DAY)
 DATE_DASH := $(YEAR)-$(MONTH)-$(DAY)
 
-IN_DIR := src/$(YEAR)/$(MONTH)/
+IN_DIR := src/$(YEAR)/$(MONTH)
 IN_MID_FILE := $(IN_DIR)/$(DATE).mid
-OUT_DIR := bin/$(YEAR)/$(MONTH)/
+OUT_DIR := bin/$(YEAR)/$(MONTH)
 
 DOCKER_LATEST_FILE := docker/latest
 

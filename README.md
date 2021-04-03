@@ -1,5 +1,6 @@
-# Daily Artworks
+# Daily Artwork
 
+The daily artifacts are published to
 https://t.me/s/SisypheanMusic
 
 # Motivation
@@ -18,7 +19,7 @@ One new goal - in addition to improving my musical skills - appeared the very fi
   - or (worst case) on a physical (for those that remember) piece of paper, if circumstances require low-tech
 - the work must be committed to the git repository, if possible on the same day
 - the work must be published on a publically available channel
-  - currently, I'm using a telegram channel for this: https://t.me/s/SisypheanMusic
+  - currently, I'm using the [Telegram messenger](https://telegram.org/) for this
 - the length of a piece may be anywhere from 1 second to a couple of minutes, hours, or even years (obviously not recorded live in the latter case), but it must contain more audible content than a MIDI->AUDIO rendering of John Cage's 4′33″
 - the work must be free of copyrights
 - the musical part of the piece (live playing, composition) must be created completely from scratch that day
@@ -50,6 +51,9 @@ One new goal - in addition to improving my musical skills - appeared the very fi
 - [MIDIVisualizer](https://github.com/kosua20/MIDIVisualizer)
 - [MuseScore SoundFont MuseScore_General_Full.sf2](https://musescore.org/en/handbook/3/soundfonts-and-sfz-files)
 - [timidity](http://timidity.sourceforge.net/)
+
+## Infrastructure
+- [Telegram messenger](https://telegram.org/)
 
 # Notes
 

@@ -18,7 +18,7 @@ DOCKER_LATEST_FILE := docker/latest
 all: record-midi render
 
 docker:
-	docker build docker -t a_tune_a_day:$(DATE)
+	docker build docker -t SisypheanMusic:$(DATE)
 	echo $(DATE) > $(DOCKER_LATEST_FILE)
 
 record-midi:
@@ -31,12 +31,12 @@ play-midi:
 render: DOCKER_LATEST_TAG := $(shell cat $(DOCKER_LATEST_FILE))
 render:
 	mkdir -p $(OUT_DIR)
-	docker run -it --rm -v $(CURDIR):/work -w /work a_tune_a_day:$(DOCKER_LATEST_TAG) render $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	docker run -it --rm -v $(CURDIR):/work -w /work SisypheanMusic:$(DOCKER_LATEST_TAG) render $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 login: DOCKER_LATEST_TAG := $(shell cat $(DOCKER_LATEST_FILE))
 login:
 	mkdir -p $(OUT_DIR)
-	docker run -it --rm -v $(CURDIR):/work -w /work a_tune_a_day:$(DOCKER_LATEST_TAG) /bin/bash
+	docker run -it --rm -v $(CURDIR):/work -w /work SisypheanMusic:$(DOCKER_LATEST_TAG) /bin/bash
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

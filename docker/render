@@ -13,9 +13,16 @@ OUT_FILE_PREFIX=$OUT_FOLDER/$DATE
 OUT_AUDIO=${OUT_FILE_PREFIX}.ogg
 OUT_IMAGE=${OUT_FILE_PREFIX}.png
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
+OUT_VIDEO_ONLY=${OUT_FILE_PREFIX}.vid.mp4
 
 set -x
 
+# render midi to audio
 fluidsynth -nli -r 48000 -o synth.cpu-cores=2 -T oga -F "$OUT_AUDIO" /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE"
-convert -pointsize 960 -font Noto-Mono label:"$DATE_SLASH" "$OUT_IMAGE"
-ffmpeg -y -loglevel warning -loop 1 -i "$OUT_IMAGE" -i "$OUT_AUDIO" -c:a copy -c:v libx264 -shortest "$OUT_VIDEO"
+
+# render midi to video
+X :0 -config /build/video-dummy.conf &
+DISPLAY=:0 /build/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 3 --export "$OUT_VIDEO_ONLY"  --format MPEG4
+
+# combine video and audio
+ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_AUDIO" -c copy "$OUT_VIDEO"

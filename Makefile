@@ -33,6 +33,11 @@ render:
 	mkdir -p $(OUT_DIR)
 	docker run -it --rm -v $(CURDIR):/work -w /work a_tune_a_day:$(DOCKER_LATEST_TAG) render $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
+login: DOCKER_LATEST_TAG := $(shell cat $(DOCKER_LATEST_FILE))
+login:
+	mkdir -p $(OUT_DIR)
+	docker run -it --rm -v $(CURDIR):/work -w /work a_tune_a_day:$(DOCKER_LATEST_TAG) /bin/bash
+
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:
 ifeq ($(LAST_GIT_COMMIT_DATE),$(DATE_DASH))

@@ -4,7 +4,9 @@ https://t.me/s/SisypheanMusic
 
 # Motivation
 
-The motivation to start the "a tune a day" project was to improve my musical skills, by forcing myself to create something musical - however small - every day, but I guess the goals will change over time. One new goal appearing the very first day was mastering the technologies needed to quickly create new musical pieces, by playing something on a MIDI keyboard and then letting the software create the finished work in form of a video automatically.
+The motivation to start the "one musical work a day" project was to improve my musical skills, by forcing myself to create something musical - however small - every day, but I guess the goals will change over time. Mike Winkelmann's [Everydays](https://www.beeple-crap.com/everydays) were the inspiration for this project.
+
+One new goal - in addition to improving my musical skills - appeared the very first day: Mastering the technologies needed to quickly create new musical pieces, by e.g. playing something on a MIDI keyboard and then letting the software create the finished work in form of a video automatically.
 
 # Rules
 
@@ -33,7 +35,7 @@ The motivation to start the "a tune a day" project was to improve my musical ski
 ## Hardware
 
 - [Any old laptop will do](https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_6th_Gen/ThinkPad_X1_Carbon_6th_Gen_Spec.PDF)
-  - but rendering of midi -> mp4 and consumes lots and lots of CPU (and perhaps GPU?) and is still slow
+  - but rendering of midi -> mp4 consumes lots and lots of CPU (and perhaps GPU?) and is still slow
 - [AKAI Professional MPK Mini Play](https://www.akaipro.com/mpk-mini-play-mpkminiplay)
 - [Roland FP-7F](https://www.roland.com/global/products/fp-7f/)
 
@@ -51,5 +53,5 @@ The motivation to start the "a tune a day" project was to improve my musical ski
 
 # Notes
 
-## 2021/4/3: reverting to mp3, after trying ogg, because ogg audio does not play in videos uploaded to Telegram on the 2 Huawei mobile phones I tested
+## 2021/4/3: reverting from ogg to mp3, because ogg audio does not play in videos uploaded to Telegram on the 2 Huawei mobile phones I tested
 - also reverting from 48kHz to 44.1kHz, because ffmpeg conversion (when using `-f s32le`?) seems to assume 44.1kHz, and the a 48kHz wav rendered to mp3 gets longer (and video / audio gets out of sync, and I guess the audio pitch drops as well)

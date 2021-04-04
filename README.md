@@ -1,6 +1,6 @@
-# Daily Artwork
+# Daily artwork
 
-The daily artifacts are published to
+The daily artifacts can be seen at
 https://t.me/s/SisypheanMusic
 
 # Do try this at home
@@ -37,7 +37,7 @@ The motivation to start the "one musical work a day" project was to improve my m
 
 One new goal - in addition to improving my musical skills - appeared the very first day: Mastering the technologies needed to quickly create new musical pieces, by e.g. playing something on a MIDI keyboard and then letting the software create the finished work in form of a video automatically.
 
-# Rules
+# Self-set rules
 
 - create something musical **every single  day**, without exception
   - which means there will be days where I will be able to spend only 10 minutes or so on the piece
@@ -53,7 +53,7 @@ One new goal - in addition to improving my musical skills - appeared the very fi
 - the musical part of the piece (live playing, composition) must be created completely from scratch that day
   - this does not however include any software that I write for this, which will (hopefully) grow incrementally over time, and which I will be able to use for my daily pieces
 
-# Goals
+# My goals
 
 - provide "source files" to the work if possible, e.g. in the form of midi a file
 - also provide the tools (e.g. in the form of a Dockerfile) to make it possible to reproduce the work by anyone, as far as possible

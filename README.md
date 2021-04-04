@@ -1,8 +1,8 @@
 # Daily artwork
 
 The daily artifacts can be seen at
-https://t.me/s/SisypheanMusic
-https://www.youtube.com/channel/UCGF-056DP2TMoM7onyGPAUw
+- https://t.me/s/SisypheanMusic
+- https://www.youtube.com/channel/UCGF-056DP2TMoM7onyGPAUw
 
 # Do try this at home
 

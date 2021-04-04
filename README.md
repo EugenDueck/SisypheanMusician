@@ -3,6 +3,34 @@
 The daily artifacts are published to
 https://t.me/s/SisypheanMusic
 
+# Do try this at home
+
+## Setup
+
+> The following steps will download something like 1 or 2 GBs off the internet, so don't try this with a slow internet connection
+
+- make sure you have [Docker installed](https://docs.docker.com/get-started/#download-and-install-docker)
+- download and unzip https://github.com/EugenDueck/SisypheanMusic/archive/refs/heads/master.zip
+- run the following commands (this will take 5 minutes or more, depending on internet connection and machine spec)
+```
+cd SisypheanMusic-master
+docker build docker -t sisypheanmusic
+```
+
+## Render MIDI -> MP4
+
+The rendering is slow and takes minutes, depending on the length of the midi file.
+
+### Windows
+```
+docker run -it --rm -v %cd%:/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile YEAR=2021 MONTH=04 DAY=02
+```
+
+### Unix/Linux/Mac
+```
+docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile YEAR=2021 MONTH=04 DAY=02
+```
+
 # Motivation
 
 The motivation to start the "one musical work a day" project was to improve my musical skills, by forcing myself to create something musical - however small - every day, but I guess the goals will change over time. Mike Winkelmann's [Everydays](https://www.beeple-crap.com/everydays) were the inspiration for this project.

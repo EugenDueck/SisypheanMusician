@@ -1,6 +1,6 @@
-FROM debian:unstable-20210329-slim
+FROM debian:testing-20210329
 
-WORKDIR /build
+WORKDIR /sisy
 
 RUN apt-get update \
 #
@@ -12,6 +12,11 @@ RUN apt-get update \
 #
 	&& apt-get install -y --no-install-recommends \
 #
+	git \
+	ca-certificates \
+	build-essential \
+	tree \
+#
 	# ffmpeg of course for processing video/audio
 	ffmpeg \
 #
@@ -22,31 +27,23 @@ RUN apt-get update \
 	fluidsynth \
 	musescore-general-soundfont-lossless \
 #
-	# in order to get and build MIDIVisualizer
-	git \
-	build-essential \
+	# MIDIVisualizer to render midi to video
 	xorg-dev \
 	libglu1-mesa-dev \
 	libgtk-3-dev \
 	libasound2-dev \
-	ffmpeg \
 	libavcodec-dev \
 	libavformat-dev \
 	libavdevice-dev \
 	cmake
-
-# to address the following error:
-# fatal: unable to access 'https://github.com/kosua20/MIDIVisualizer/': server certificate verification failed. CAfile: none CRLfile: none
-RUN git config --global http.sslverify false
 
 # get and build MIDIVisualizer
 RUN git clone -b v6.3 --depth 1 https://github.com/kosua20/MIDIVisualizer
 RUN mkdir MIDIVisualizer/build
 RUN cd MIDIVisualizer/build && cmake ../ && make
 
-# install xserver as one is needed by MIDIVisualizer
+# in order to run MIDIVisualizer
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xserver-xorg-video-dummy
-COPY video-dummy.conf .
+COPY video-dummy.conf ./
 
-# add main script to path
-COPY render /usr/bin
+COPY Makefile render ./

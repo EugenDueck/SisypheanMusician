@@ -7,7 +7,7 @@ I've filed an issue: https://github.com/NFJones/audio-to-midi/issues/11
 git clone
 python3 ./setup.py install --user
 ```
-# fix tag target:
+# fix tag target
 It fails, although last commit date is equal to the current date
 ```
 $ make tag

@@ -1,3 +1,12 @@
+# wav to midi
+## https://github.com/NFJones/audio-to-midi
+I tried this, but the produced midi files (e.g. doing `audio-to-midi 20210402.wav -b 120 -t 30` were completely unusable)
+I've filed an issue: https://github.com/NFJones/audio-to-midi/issues/11
+### building and installing
+```
+git clone
+python3 ./setup.py install --user
+```
 # fix tag target:
 It fails, although last commit date is equal to the current date
 ```

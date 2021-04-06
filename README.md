@@ -67,6 +67,7 @@ One new goal - in addition to improving my musical skills - appeared the very fi
   - but rendering of midi -> mp4 consumes lots and lots of CPU (and perhaps GPU?) and is still slow
 - [AKAI Professional MPK Mini Play](https://www.akaipro.com/mpk-mini-play-mpkminiplay)
 - [Roland FP-7F](https://www.roland.com/global/products/fp-7f/)
+- [BOSS RC-202 Looper](https://www.boss.info/global/products/rc-202/)
 
 ## Software
 

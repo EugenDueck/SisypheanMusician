@@ -22,7 +22,7 @@ fluidsynth -nli -r 44100 -o synth.cpu-cores=2 -T raw -F- /usr/share/sounds/sf2/M
 
 # render midi to video
 X :0 -config /sisy/video-dummy.conf &
-DISPLAY=:0 /sisy/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 3 --export "$OUT_VIDEO_ONLY" --format MPEG4 --color-keyboard 0 0 1 --color-particles 1 0 0 --color-pedal 0 1 0 --color-major 0 0 1 --color-minor 1 0 0
+DISPLAY=:0 /sisy/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 3 --export "$OUT_VIDEO_ONLY" --format MPEG4 --color-keyboard 0 1 1 --color-particles 1 0 0 --color-pedal 0 1 0 --color-major 0 0 1 --color-minor 1 0 0
 
 # create timestamp watermark
 convert -pointsize 64 -font DejaVu-Sans-Bold -background none -fill white label:"$DATE_SLASH" "$OUT_IMAGE"

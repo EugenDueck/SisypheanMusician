@@ -68,6 +68,7 @@ One new goal - in addition to improving my musical skills - appeared the very fi
 - [AKAI Professional MPK Mini Play](https://www.akaipro.com/mpk-mini-play-mpkminiplay)
 - [Roland FP-7F](https://www.roland.com/global/products/fp-7f/)
 - [BOSS RC-202 Looper](https://www.boss.info/global/products/rc-202/)
+- [ZOOM Q4n](https://zoomcorp.com/en/jp/video-recorders/video-recorders/q4n/)
 
 ## Software
 

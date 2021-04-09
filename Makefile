@@ -14,14 +14,17 @@ IN_MID_FILE := $(IN_DIR)/$(DATE).mid
 docker:
 	docker build docker -t sisypheanmusic
 
-render:
-	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+render-mid:
+	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 
-record-midi:
+render-wav:
+	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-wav YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+
+record-mid:
 	mkdir -p $(IN_DIR)
 	arecordmidi -p 20:0 $(IN_MID_FILE)
 
-play-midi:
+play-mid:
 	timidity $(IN_MID_FILE)
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))

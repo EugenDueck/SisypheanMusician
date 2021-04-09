@@ -21,8 +21,12 @@ IN_DIR := $(IN_ROOT)/$(YEAR)/$(MONTH)
 IN_MID_FILE := $(IN_DIR)/$(DATE).mid
 OUT_DIR := $(OUT_ROOT)/$(YEAR)/$(MONTH)
 
-render:
+render-mid:
 	mkdir -p $(OUT_DIR)
-	/sisy/render $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	/sisy/render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+
+render-wav:
+	mkdir -p $(OUT_DIR)
+	/sisy/render-wav $(OUT_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 .PHONY: render

@@ -17,6 +17,8 @@ docker:
 render-mid:
 	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 
+#render-mid-gpu: # fails (docker seemingly only supports NVIDIA)
+#	docker run -it --rm --gpus all -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 #render-mid-host: # unfortunately, this does not make use of the host's GPU
 #	docker run -it --rm -e DISPLAY=172.17.0.1$(DISPLAY) -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 

@@ -39,6 +39,12 @@ convert -pointsize 64 -font DejaVu-Sans-Bold -background none -fill white label:
 # combine video+watermark and audio
 ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO_MP3" -codec:a copy "$OUT_VIDEO"
 
-# TODO
-# append picture to the end of the video
-# ffmpeg -loop 1 -i 20210411.pic.jpg -c:v libx264 -t 3 -pix_fmt yuv420p -vf scale=1920:1080 20210411.pic.mp4
+# TODO: append picture to the end of the video
+## jpg to mp4
+# ffmpeg -loop 1 -i 20210412.pic.jpg -c:v libx264 -t 3 -pix_fmt yuv420p -vf scale=1920:1080 20210412.pic.mp4
+
+## add silent mp3
+# ffmpeg -ar 44100 -acodec pcm_s16le -f s16le -ac 2 -channel_layout 2.1 -i /dev/zero -i 20210412.pic.mp4 -vcodec copy -acodec libmp3lame -shortest 20210412.pic.sound.mp4
+
+## concat videos
+# ffmpeg -i 20210412.mid.mp4 -i 20210412.pic.sound.mp4 -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" 20210412.mp4

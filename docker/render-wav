@@ -1,23 +1,27 @@
 #!/bin/bash
 
-set -x
+set -ex
 
-IN_FOLDER=$1
-OUT_FOLDER=$2
-YEAR=$3
-MONTH=$4
-DAY=$5
-DATE=$3$4$5
-DATE_SLASH=$3/$4/$5
+OUT_FOLDER=$1
+YEAR=$2
+MONTH=$3
+DAY=$4
+DATE=$2$3$4
+DATE_SLASH=$2/$3/$4
 
-IN_FILE=$IN_FOLDER/$DATE.wav
-OUT_FILE_PREFIX=$OUT_FOLDER/$DATE
+IN_FILE=${OUT_FOLDER}/$DATE.wav
+OUT_FILE_PREFIX=${OUT_FOLDER}/$DATE
 OUT_AUDIO=${OUT_FILE_PREFIX}.mp3
+OUT_AUDIO_NORMALIZED=${OUT_FILE_PREFIX}.normalized.wav
 OUT_IMAGE=${OUT_FILE_PREFIX}.png
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
 
+# normalize audio
+cp -v "$IN_FILE" "$OUT_AUDIO_NORMALIZED"
+normalize-audio "$OUT_AUDIO_NORMALIZED"
+
 # convert wav to mp3
-ffmpeg -y -loglevel warning -i "$IN_FILE" -acodec libmp3lame -ab 64k "$OUT_AUDIO"
+ffmpeg -y -loglevel warning -i "$OUT_AUDIO_NORMALIZED" -acodec libmp3lame -ab 64k "$OUT_AUDIO"
 
 # create timestamp watermark
 convert -pointsize 240 -background red -fill yellow -font DejaVu-Sans-Bold label:"$DATE_SLASH" "$OUT_IMAGE"

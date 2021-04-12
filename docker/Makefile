@@ -27,6 +27,6 @@ render-mid:
 
 render-wav:
 	mkdir -p $(OUT_DIR)
-	/sisy/render-wav $(OUT_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	/sisy/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
-.PHONY: render
+.PHONY: render-mid render-wav

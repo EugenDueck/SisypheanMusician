@@ -46,4 +46,7 @@ RUN cd MIDIVisualizer/build && cmake ../ && make
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xserver-xorg-video-dummy
 COPY video-dummy.conf ./
 
+# normalization
+RUN apt-get install -y --no-install-recommends normalize-audio
+
 COPY Makefile render-wav render-mid ./

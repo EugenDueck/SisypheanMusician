@@ -17,6 +17,9 @@ docker:
 render-mid:
 	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 
+#render-mid-host: # unfortunately, this does not make use of the host's GPU
+#	docker run -it --rm -e DISPLAY=172.17.0.1$(DISPLAY) -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+
 render-wav:
 	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-wav YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 
@@ -35,4 +38,4 @@ else
 	$(error Last git commit date $(LAST_GIT_COMMIT_DATE) is different from current date $(DATE_DASH) - please commit the changes first or tag manually)
 endif
 
-.PHONY: docker render record-midi play-midi tag
+.PHONY: docker render-mid render-wav record-mid play-mid tag

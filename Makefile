@@ -19,8 +19,9 @@ render-mid:
 
 #render-mid-gpu: # fails (docker seemingly only supports NVIDIA)
 #	docker run -it --rm --gpus all -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
-#render-mid-host: # unfortunately, this does not make use of the host's GPU
-#	docker run -it --rm -e DISPLAY=172.17.0.1$(DISPLAY) -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+
+render-mid-host: # unfortunately, this does not make use of the host's GPU
+	docker run -it --rm -e DISPLAY=172.17.0.1$(DISPLAY) -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
 
 render-wav:
 	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-wav YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
@@ -29,8 +30,11 @@ record-mid:
 	mkdir -p $(IN_DIR)
 	arecordmidi -p 20:0 $(IN_MID_FILE)
 
-play-mid:
+play-mid-timidity:
 	timidity $(IN_MID_FILE)
+
+play-mid:
+	aplaymidi -p 20:0 $(IN_MID_FILE)
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:
@@ -40,4 +44,4 @@ else
 	$(error Last git commit date $(LAST_GIT_COMMIT_DATE) is different from current date $(DATE_DASH) - please commit the changes first or tag manually)
 endif
 
-.PHONY: docker render-mid render-wav record-mid play-mid tag
+.PHONY: docker render-mid render-wav record-mid play-mid play-mid-timidity tag render-mid-host render-mid-gpu

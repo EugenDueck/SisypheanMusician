@@ -40,7 +40,15 @@ ffmpeg -loglevel warning -y -i "$OUT_AUDIO" -vn -ar 44100 -ac 2 -b:a 192k "$OUT_
 ########################################
 
 ## TODO: start dummy x-server only if DISPLAY variable not set
+#apt-get install -y mesa-utils
 X :0 -config /sisy/video-dummy.conf &
+#echo "${DISPLAY}"
+#echo DISPLAY="${DISPLAY:-:0}"
+#echo "//////////////////"
+#DISPLAY="${DISPLAY:-:0}" glxinfo |  grep -E " version| string| rendering|display"
+#echo "//////////////////"
+#echo $(readlink -f $(ldd `which glxinfo`))
+#export LIBGL_ALWAYS_INDIRECT=1
 DISPLAY="${DISPLAY:-:0}" /sisy/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 0 --export "$OUT_VIDEO_ONLY" --format MPEG4 --color-keyboard 0 1 1 --color-particles 1 0 0 --color-pedal 0 1 0 --color-major 0 0 1 --color-minor 1 0 0 --color-wave 0 1 0 --color-bg 0.3 0 0
 
 ########################################
@@ -63,4 +71,5 @@ ffmpeg -loglevel warning -y -loop 1 -i "$OUT_PIC" -c:v libx264 -t 3 -pix_fmt yuv
 ffmpeg -loglevel warning -y -ar 44100 -acodec pcm_s16le -f s16le -ac 2 -channel_layout 2.1 -i /dev/zero -i "$OUT_PIC_VIDEO" -vcodec copy -acodec libmp3lame -shortest "$OUT_PIC_VIDEO_AUDIO"
 
 ## concat videos
-ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" "$OUT_VIDEO"
+ffmpeg -loglevel warning -y -f concat -safe 0 -i <(echo -e file $(pwd)/$OUT_VIDEO_AUDIO\\nfile $(pwd)/$OUT_PIC_VIDEO_AUDIO) -c copy "$OUT_VIDEO"
+#ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" "$OUT_VIDEO"

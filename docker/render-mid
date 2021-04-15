@@ -71,5 +71,38 @@ ffmpeg -loglevel warning -y -loop 1 -i "$OUT_PIC" -c:v libx264 -t 3 -pix_fmt yuv
 ffmpeg -loglevel warning -y -ar 44100 -acodec pcm_s16le -f s16le -ac 2 -channel_layout 2.1 -i /dev/zero -i "$OUT_PIC_VIDEO" -vcodec copy -acodec libmp3lame -shortest "$OUT_PIC_VIDEO_AUDIO"
 
 ## concat videos
-ffmpeg -loglevel warning -y -f concat -safe 0 -i <(echo -e file $(pwd)/$OUT_VIDEO_AUDIO\\nfile $(pwd)/$OUT_PIC_VIDEO_AUDIO) -c copy "$OUT_VIDEO"
-#ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" "$OUT_VIDEO"
+ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" "$OUT_VIDEO"
+
+################################################################
+## The following ways to concat videos did not work:
+################################################################
+
+################################################################
+#ffmpeg -loglevel warning -y -f concat -safe 0 -i <(echo -e file $(pwd)/$OUT_VIDEO_AUDIO\\nfile $(pwd)/$OUT_PIC_VIDEO_AUDIO) -c copy "$OUT_VIDEO"
+# videos concatted using '-f concat' work when playing locally with mp4, but they don't work in Youtube and Telegram :(
+################################################################
+
+################################################################
+#ffmpeg -y -loglevel warning -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0:v][0:a][1:v][1:a] concat=n=2:v=1:a=1 [outv] [outa]" -map "[outv]" -map "[outa]" "$OUT_VIDEO"
+# [Parsed_concat_0 @ 0x562560f33640] Input link in1:v0 parameters (size 1920x1080, SAR 2937:3664) do not match the corresponding output link in0:v0 parameters (1920x1080, SAR 1:1)
+# [Parsed_concat_0 @ 0x562560f33640] Failed to configure output pad on Parsed_concat_0
+# Error reinitializing filters!
+# Failed to inject frame into filter network: Invalid argument
+################################################################
+
+################################################################
+#ffmpeg -y -loglevel warning -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]setdar=16/9[a];[1]setdar=16/9[b];[2]setdar=16/9[c];[3]setdar=16/9[d]; [a][b][c][d]concat=n=4:v=1:a=1" "$OUT_VIDEO"
+# [Parsed_setdar_1 @ 0x5640234df9c0] Media type mismatch between the 'Parsed_setdar_1' filter output pad 0 (video) and the 'Parsed_concat_4' filter input pad 1 (audio)
+# [AVFilterGraph @ 0x564023529080] Cannot create the link setdar:0 -> concat:1
+# Error initializing complex filters.
+# Invalid argument
+################################################################
+
+################################################################
+#ffmpeg -y -loglevel warning -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0:v]scale=1920:1080:force_original_aspect_ratio=1[v0]; [1:v]scale=1920:1080:force_original_aspect_ratio=1[v1]; [v0][0:a][v1][1:a]concat=n=2:v=1:a=1[v][a]" -map [v] -map [a] "$OUT_VIDEO"
+# [Parsed_concat_2 @ 0x563b078772c0] Input link in1:v0 parameters (size 1920x1080, SAR 2937:3664) do not match the corresponding output link in0:v0 parameters (1920x1080, SAR 1:1)
+# [Parsed_concat_2 @ 0x563b078772c0] Failed to configure output pad on Parsed_concat_2
+# Error reinitializing filters!
+# Failed to inject frame into filter network: Invalid argument
+# Error while processing the decoded data for stream #1:0
+################################################################

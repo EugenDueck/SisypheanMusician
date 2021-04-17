@@ -22,22 +22,22 @@ OUT_PIC_VIDEO=${OUT_FILE_PREFIX}.pic.mp4
 OUT_PIC_VIDEO_AUDIO=${OUT_FILE_PREFIX}.pic.sound.mp4
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
 
-########################################
-# render midi -> audio
-########################################
+echo '########################################'
+echo '# render midi -> audio'
+echo '########################################'
 
-# render midi to audio
+echo '# render midi to audio'
 fluidsynth -nli -r 44100 -o synth.cpu-cores=2 -Twav -F"$OUT_AUDIO" /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE"
 
-# normalize audio
+echo '# normalize audio'
 normalize-audio "$OUT_AUDIO"
 
-# wav -> mp3
+echo '# wav -> mp3'
 ffmpeg -loglevel warning -y -i "$OUT_AUDIO" -vn -ar 44100 -ac 2 -b:a 192k "$OUT_AUDIO_MP3"
 
-########################################
-# render midi -> video
-########################################
+echo '########################################'
+echo '# render midi -> video'
+echo '########################################'
 
 ## TODO: start dummy x-server only if DISPLAY variable not set
 #apt-get install -y mesa-utils
@@ -49,29 +49,29 @@ X :0 -config /sisy/video-dummy.conf &
 #echo "//////////////////"
 #echo $(readlink -f $(ldd `which glxinfo`))
 #export LIBGL_ALWAYS_INDIRECT=1
-DISPLAY="${DISPLAY:-:0}" /sisy/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 0 --export "$OUT_VIDEO_ONLY" --format MPEG4 --color-keyboard 0 1 1 --color-particles 1 0 0 --color-pedal 0 1 0 --color-major 0 0 1 --color-minor 1 0 0 --color-wave 0 1 0 --color-bg 0.3 0 0
+DISPLAY="${DISPLAY:-:0}" /sisy/MIDIVisualizer/build/MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 1 --export "$OUT_VIDEO_ONLY" --format MPEG4 --color-keyboard 0 0 0 --color-particles 0.0504825 0.00509421 0.519608 --color-pedal 0.79902 0.0509179 0.0509179 --color-major 0.0504825 0.00509421 0.519608 -color-minor 0.0504825 0.00509421 0.519608 --color-wave 0.568627 0 0 --color-bg 0 0 0
 
-########################################
-# add timestamp watermark
-########################################
+echo '########################################'
+echo '# add timestamp watermark'
+echo '########################################'
 
-# create timestamp watermark
+echo '# create timestamp watermark'
 convert -pointsize 64 -font DejaVu-Sans-Bold -background none -fill white label:"$DATE_SLASH" "$OUT_IMAGE"
 
-# combine video+watermark and audio
+echo '# combine video+watermark and audio'
 ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO_MP3" -codec:a copy "$OUT_VIDEO_AUDIO"
 
-########################################
-# append picture to the end of the video
-########################################
-## jpg to mp4
+echo '########################################'
+echo '# append picture to the end of the video'
+echo '########################################'
+echo '## jpg to mp4'
 ffmpeg -loglevel warning -y -loop 1 -i "$OUT_PIC" -c:v libx264 -t 3 -pix_fmt yuv420p -vf scale=1920:1080 "$OUT_PIC_VIDEO"
 
-## add silent mp3
+echo '## add silent mp3'
 ffmpeg -loglevel warning -y -ar 44100 -acodec pcm_s16le -f s16le -ac 2 -channel_layout 2.1 -i /dev/zero -i "$OUT_PIC_VIDEO" -vcodec copy -acodec libmp3lame -shortest "$OUT_PIC_VIDEO_AUDIO"
 
-## concat videos
-ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" "$OUT_VIDEO"
+echo '## concat videos'
+ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -i "$OUT_PIC_VIDEO_AUDIO" -filter_complex "[0]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v0];[1]scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1[v1];[v0][0:a:0][v1][1:a:0]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" _"$OUT_VIDEO"
 
 ################################################################
 ## The following ways to concat videos did not work:

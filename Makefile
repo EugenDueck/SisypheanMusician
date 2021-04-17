@@ -34,6 +34,9 @@ play-mid-timidity:
 	timidity $(IN_MID_FILE)
 
 play-mid:
+	fluidsynth -a alsa -m alsa_seq -l -i /usr/share/sounds/sf2/MuseScore_General_Full.sf2 $(IN_MID_FILE)
+
+play-mid-keyboard:
 	aplaymidi -p 20:0 $(IN_MID_FILE)
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
@@ -44,4 +47,4 @@ else
 	$(error Last git commit date $(LAST_GIT_COMMIT_DATE) is different from current date $(DATE_DASH) - please commit the changes first or tag manually)
 endif
 
-.PHONY: docker render-mid render-wav record-mid play-mid play-mid-timidity tag render-mid-host render-mid-gpu
+.PHONY: docker render-mid render-wav record-mid play-mid play-mid-keyboard play-mid-timidity tag render-mid-host render-mid-gpu

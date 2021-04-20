@@ -1,8 +1,8 @@
-# Daily artwork
+# Daily musical snippet
 
-The daily artifacts can be seen at
-- https://t.me/s/SisypheanMusic
-- https://www.youtube.com/channel/UCGF-056DP2TMoM7onyGPAUw
+The daily musical snippet can be seen on the *Sisyphean Musician* channels on
+- [Youtube](https://www.youtube.com/channel/UCGF-056DP2TMoM7onyGPAUw)
+- [Telegram](https://t.me/s/SisypheanMusic)
 
 # Do try this at home
 
@@ -24,17 +24,17 @@ The rendering is slow and takes minutes, depending on the length of the midi fil
 
 ### Windows
 ```
-docker run -it --rm -v %cd%:/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile YEAR=2021 MONTH=04 DAY=02
+docker run -it --rm -v %cd%:/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=2021 MONTH=04 DAY=02
 ```
 
 ### Unix/Linux/Mac
 ```
-docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile YEAR=2021 MONTH=04 DAY=02
+docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=2021 MONTH=04 DAY=02
 ```
 
 # Motivation
 
-The motivation to start the "one musical work a day" project was to improve my musical skills, by forcing myself to create something musical - however small - every day, but I guess the goals will change over time. Mike Winkelmann's [Everydays](https://www.beeple-crap.com/everydays) were the inspiration for this project.
+The motivation to start the "one musical snippet a day" project was to improve my musical skills, by forcing myself to create something musical - however small - every day, but I guess the goals will change over time. Mike Winkelmann's [Everydays](https://www.beeple-crap.com/everydays) were the inspiration for this project.
 
 One new goal - in addition to improving my musical skills - appeared the very first day: Mastering the technologies needed to quickly create new musical pieces, by e.g. playing something on a MIDI keyboard and then letting the software create the finished work in form of a video automatically.
 

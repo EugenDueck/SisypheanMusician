@@ -7,24 +7,21 @@ DATE_SLASH := $(YEAR)/$(MONTH)/$(DAY)
 DATE_DASH := $(YEAR)-$(MONTH)-$(DAY)
 
 IN_ROOT := src
+OUT_ROOT := bin
 
 IN_DIR := $(IN_ROOT)/$(YEAR)/$(MONTH)
 IN_MID_FILE := $(IN_DIR)/$(DATE).mid
 
-docker:
-	docker build docker -t sisypheanmusic
+IN_ROOT := src
+OUT_DIR := $(OUT_ROOT)/$(YEAR)/$(MONTH)
 
 render-mid:
-	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
-
-#render-mid-gpu: # fails (docker seemingly only supports NVIDIA)
-#	docker run -it --rm --gpus all -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
-
-render-mid-host: # unfortunately, this does not make use of the host's GPU
-	docker run -it --rm -e DISPLAY=172.17.0.1$(DISPLAY) -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-mid YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+	mkdir -p $(OUT_DIR)
+	render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 render-wav:
-	docker run -it --rm -v $(CURDIR):/sisy/work -w /sisy/work sisypheanmusic make -f /sisy/Makefile render-wav YEAR=$(YEAR) MONTH=$(MONTH) DAY=$(DAY)
+	mkdir -p $(OUT_DIR)
+	render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 record-mid:
 	mkdir -p $(IN_DIR)
@@ -47,4 +44,4 @@ else
 	$(error Last git commit date $(LAST_GIT_COMMIT_DATE) is different from current date $(DATE_DASH) - please commit the changes first or tag manually)
 endif
 
-.PHONY: docker render-mid render-wav record-mid play-mid play-mid-keyboard play-mid-timidity tag render-mid-host render-mid-gpu
+.PHONY: render-mid render-wav record-mid play-mid play-mid-keyboard play-mid-timidity tag render-mid-host render-mid-gpu

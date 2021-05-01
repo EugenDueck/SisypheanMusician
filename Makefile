@@ -17,11 +17,11 @@ OUT_DIR := $(OUT_ROOT)/$(YEAR)/$(MONTH)
 
 render-mid:
 	mkdir -p $(OUT_DIR)
-	render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	scripts/render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 render-wav:
 	mkdir -p $(OUT_DIR)
-	render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	scripts/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 record-mid:
 	mkdir -p $(IN_DIR)

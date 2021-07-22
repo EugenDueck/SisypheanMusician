@@ -19,44 +19,58 @@ OUT_VIDEO_AUDIO=${OUT_FILE_PREFIX}.vid-aud.mov
 OUT_PIC=${OUT_FILE_PREFIX}.pic.jpg
 OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
 
-########################################
-# render midi -> audio'
-########################################
+if [ -f "$OUT_VIDEO_AUDIO" ]; then
+    echo "$OUT_VIDEO_AUDIO" already exists
+else
+    ########################################
+    # render midi -> audio'
+    ########################################
 
-echo '# render midi to audio'
-fluidsynth -nli -r 44100 -o synth.cpu-cores=2 -Twav -F"$OUT_AUDIO" /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE"
+    echo '# render midi to audio'
+    fluidsynth -nli -r 44100 -o synth.cpu-cores=2 -Twav -F"$OUT_AUDIO" /usr/share/sounds/sf2/MuseScore_General_Full.sf2 "$IN_FILE"
 
-echo '# normalize audio'
-normalize-audio "$OUT_AUDIO"
+    echo '# normalize audio'
+    normalize-audio "$OUT_AUDIO"
 
-########################################
-# render midi -> video
-########################################
+    ########################################
+    # render midi -> video
+    ########################################
 
-echo '#render midi -> video'
-DISPLAY="${DISPLAY:-:0}" MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --preroll 0 --postroll 1 --export "$OUT_VIDEO_ONLY" --format PRORES --color-keyboard 0 0 0 --color-particles 0.0504825 0.00509421 0.519608 --color-pedal 0.79902 0.0509179 0.0509179 --color-major 0.0504825 0.00509421 0.519608 -color-minor 0.0504825 0.00509421 0.519608 --color-wave 0.568627 0 0 --color-bg 0 0 0
+    echo '#render midi -> video'
 
-########################################
-# add timestamp watermark'
-########################################
+    DISPLAY="${DISPLAY:-:0}" MIDIVisualizer --midi "$IN_FILE" --size 1920 1080 --framerate 30 --format PRORES --preroll 0 --postroll 1 --export "$OUT_VIDEO_ONLY" --color-keyboard 0 0 0 --color-particles 0.0504825 0.00509421 0.519608 --color-pedal 0.79902 0.0509179 0.0509179 --color-major 0.0504825 0.00509421 0.519608 -color-minor 0.0504825 0.00509421 0.519608 --color-wave 0.568627 0 0 --color-bg 0 0 0
 
-echo '# create timestamp watermark'
-convert \( -background none -gravity west -pointsize 64 -font DejaVu-Sans-Bold -fill white caption:"$DATE_SLASH" \
-  \( +clone -background black -shadow 320x3-0-0  \) +swap -background none -layers merge +repage \) "$OUT_IMAGE"
+    ########################################
+    # add timestamp watermark'
+    ########################################
 
-echo '# combine video+watermark and audio'
-ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO" -codec:v prores -codec:a copy "$OUT_VIDEO_AUDIO"
+    echo '# create timestamp watermark'
+    convert \( -background none -gravity west -pointsize 64 -font DejaVu-Sans-Bold -fill white caption:"$DATE_SLASH" \
+	    \( +clone -background black -shadow 320x3-0-0  \) +swap -background none -layers merge +repage \) "$OUT_IMAGE"
 
-########################################
-# append picture to the end of the video
-########################################
+    echo '# combine video+watermark and audio'
+    ffmpeg -y -loglevel warning -i "$OUT_VIDEO_ONLY" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO" -codec:v prores -codec:a copy "$OUT_VIDEO_AUDIO"
 
-echo '# append picture to the end of the video'
-ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -loop 1 -t 1 -i "$OUT_PIC" -f lavfi -t 3 -i anullsrc -filter_complex "[1:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2'[i];[0:v][0:a][i][2:a] concat=n=2:v=1:a=1[v][a]" -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
+fi
 
-########################################
-# cleanup
-########################################
+if [ ! -f "$OUT_PIC" ]; then
+    echo Create "$OUT_PIC" and run again to finalize video
+else
 
-echo '# remove temporary files'
-rm -f "$OUT_AUDIO" "$OUT_IMAGE" "$OUT_VIDEO_ONLY" "$OUT_VIDEO_AUDIO"
+    ########################################
+    # append picture to the end of the video
+    ########################################
+
+    echo '# append picture to the end of the video'
+    ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -loop 1 -t 1 -i "$OUT_PIC" -f lavfi -t 3 -i anullsrc -filter_complex "[1:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2'[i];[0:v][0:a][i][2:a] concat=n=2:v=1:a=1[v][a]" -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
+
+    #'-movflags +faststart' does NOT make video work on mobile
+
+    ########################################
+    # cleanup
+    ########################################
+
+    echo '# remove temporary files'
+    rm -f "$OUT_AUDIO" "$OUT_IMAGE" "$OUT_VIDEO_ONLY" "$OUT_VIDEO_AUDIO"
+
+fi

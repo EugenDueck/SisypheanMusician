@@ -1,6 +1,6 @@
-YEAR := $(shell date +%Y)
-MONTH := $(shell date +%m)
-DAY := $(shell date +%d)
+YEAR = $(shell date +%Y)
+MONTH = $(shell date +%m)
+DAY = $(shell date +%d)
 
 DATE := $(YEAR)$(MONTH)$(DAY)
 DATE_SLASH := $(YEAR)/$(MONTH)/$(DAY)

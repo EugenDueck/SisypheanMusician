@@ -62,9 +62,7 @@ else
     ########################################
 
     echo '# append picture to the end of the video'
-    ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -loop 1 -t 1 -i "$OUT_PIC" -f lavfi -t 3 -i anullsrc -filter_complex "[1:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2'[i];[0:v][0:a][i][2:a] concat=n=2:v=1:a=1[v][a]" -pix_fmt yuv420p -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
-
-    #'-movflags +faststart' does NOT make video work on mobile
+    ffmpeg -loglevel warning -y -i "$OUT_VIDEO_AUDIO" -loop 1 -t 1 -i "$OUT_PIC" -f lavfi -t 3 -i anullsrc -filter_complex "[1:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2'[i];[0:v][0:a][i][2:a] concat=n=2:v=1:a=1[v][a]" -pix_fmt yuv420p -movflags +faststart -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
 
     ########################################
     # cleanup

@@ -17,6 +17,15 @@ OUT_DIR := $(OUT_ROOT)/$(YEAR)/$(MONTH)
 
 MIDI_DEVICE := $(shell arecordmidi -l|sed -nre 's/^\s*(\S+)\s*Roland Digital Piano.*$$/\1/p')
 
+record-mid:
+	mkdir -p $(IN_DIR)
+	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
+
+score-png:
+	test $(SCORE)
+	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
+	mv $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score-1.png $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png
+
 render-mid:
 	mkdir -p $(OUT_DIR)
 	scripts/render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
@@ -24,10 +33,6 @@ render-mid:
 render-wav:
 	mkdir -p $(OUT_DIR)
 	scripts/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
-
-record-mid:
-	mkdir -p $(IN_DIR)
-	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
 
 play-mid-timidity:
 	timidity $(IN_MID_FILE)
@@ -37,6 +42,9 @@ play-mid:
 
 play-mid-keyboard:
 	aplaymidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
+
+play-mp4:
+	mpv --fs $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).mp4
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

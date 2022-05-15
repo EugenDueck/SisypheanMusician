@@ -1,3 +1,5 @@
+SHELL=/bin/bash
+
 YEAR = $(shell date +%Y)
 MONTH = $(shell date +%m)
 DAY = $(shell date +%d)
@@ -5,6 +7,10 @@ DAY = $(shell date +%d)
 DATE := $(YEAR)$(MONTH)$(DAY)
 DATE_SLASH := $(YEAR)/$(MONTH)/$(DAY)
 DATE_DASH := $(YEAR)-$(MONTH)-$(DAY)
+
+DAY_SECS_0 := $(shell date --date="2021/04/01" +%s)
+DAY_SECS_TODAY := $(shell date --date="$(YEAR)/$(MONTH)/$(DAY)" +%s)
+DAY_NO := $(shell echo '($(DAY_SECS_TODAY)-$(DAY_SECS_0))/(3600*24)' | bc)
 
 IN_ROOT := src
 OUT_ROOT := bin
@@ -45,6 +51,10 @@ play-mid-keyboard:
 
 play-mp4:
 	mpv --fs $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).mp4
+
+git-commit:
+	git add src
+	git commit -m '$(YEAR)/$(MONTH)/$(DAY) - Day $(DAY_NO)'
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

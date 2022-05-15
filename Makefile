@@ -32,6 +32,15 @@ score-png:
 	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
 	mv $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score-1.png $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png
 
+score-png-alpha:
+	test $(SCORE)
+	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
+	mv $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score-1.png $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png
+	convert $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -write MPR:orig -alpha extract \
+	\( +clone -colorspace gray -fx "1-j/h/1.5" \)     \
+	-compose multiply -composite \
+	MPR:orig +swap -compose copyopacity -composite $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.alpha.png
+
 render-mid:
 	mkdir -p $(OUT_DIR)
 	scripts/render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)

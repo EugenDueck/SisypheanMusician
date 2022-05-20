@@ -32,6 +32,7 @@ score-png:
 	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
 	mv $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score-1.png $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png
 
+# unused as of yet (WIP):
 score-png-alpha:
 	test $(SCORE)
 	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
@@ -40,6 +41,13 @@ score-png-alpha:
 	\( +clone -colorspace gray -fx "1-j/h/1.5" \)     \
 	-compose multiply -composite \
 	MPR:orig +swap -compose copyopacity -composite $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.alpha.png
+
+watermark:
+	test $(VIDEO)
+	convert \( -background none -gravity west -pointsize 64 -font DejaVu-Sans-Bold -fill white caption:"$(DATE_SLASH)" \
+	    \( +clone -background black -shadow 320x3-0-0  \) +swap -background none -layers merge +repage \) "$(DATE_DASH).png"
+	ffmpeg -y -loglevel warning -i "$(VIDEO)" -i "$(DATE_DASH).png" -filter_complex "overlay=W-w-10:10" -codec:v prores -codec:a copy "$(basename $(VIDEO)).watermark.mov"
+	rm "$(DATE_DASH).png"
 
 render-mid:
 	mkdir -p $(OUT_DIR)

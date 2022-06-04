@@ -81,4 +81,4 @@ else
 	$(error Last git commit date $(LAST_GIT_COMMIT_DATE) is different from current date $(DATE_DASH) - please commit the changes first or tag manually)
 endif
 
-.PHONY: render-mid render-wav record-mid play-mid play-mid-keyboard play-mid-timidity tag render-mid-host render-mid-gpu
+.PHONY: render-mid render-wav record-mid play-mid play-mid-keyboard play-mid-timidity tag

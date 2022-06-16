@@ -23,6 +23,9 @@ OUT_DIR := $(OUT_ROOT)/$(YEAR)/$(MONTH)
 
 MIDI_DEVICE := $(shell arecordmidi -l|sed -nre 's/^\s*(\S+)\s*Roland Digital Piano.*$$/\1/p')
 
+in-dir:
+	mkdir -p $(IN_DIR)
+
 record-mid:
 	mkdir -p $(IN_DIR)
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
@@ -56,6 +59,11 @@ render-mid:
 render-wav:
 	mkdir -p $(OUT_DIR)
 	scripts/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+
+render-mov:
+	test $(VIDEO)
+	mkdir -p $(OUT_DIR)
+	scripts/render-mov $(VIDEO) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 play-mid-timidity:
 	timidity $(IN_MID_FILE)

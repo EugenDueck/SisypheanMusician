@@ -1,0 +1,87 @@
+#!/bin/bash
+
+set -ex
+
+IN_FILE=$1
+OUT_FOLDER=$2
+YEAR=$3
+MONTH=$4
+DAY=$5
+DATE=$3$4$5
+DATE_SLASH=$3/$4/$5
+
+SCORE_SECONDS=1
+PICTURE_SECONDS=3
+
+OUT_FILE_PREFIX=$OUT_FOLDER/$DATE
+OUT_AUDIO=${OUT_FILE_PREFIX}.wav
+OUT_IMAGE=${OUT_FILE_PREFIX}.png
+OUT_VIDEO_AUDIO=${OUT_FILE_PREFIX}.vid-aud.mov
+OUT_PIC=${OUT_FILE_PREFIX}.pic.jpg
+SCORE_PIC=${OUT_FILE_PREFIX}.score.png
+OUT_VIDEO=${OUT_FILE_PREFIX}.mp4
+
+
+
+if [ -f "$OUT_VIDEO_AUDIO" ]; then
+    echo "$OUT_VIDEO_AUDIO" already exists
+else
+    ########################################
+    # normalize audio
+    ########################################
+
+    echo '# extract audio'
+    time ffmpeg -i "$IN_FILE" "$OUT_AUDIO"
+
+    echo '# normalize audio'
+    time normalize-audio "$OUT_AUDIO"
+
+
+    ########################################
+    # add timestamp watermark
+    ########################################
+
+    echo '# create timestamp watermark'
+    convert \( -background none -gravity west -pointsize 64 -font DejaVu-Sans-Bold -fill white caption:"$DATE_SLASH" \
+	    \( +clone -background black -shadow 320x3-0-0  \) +swap -background none -layers merge +repage \) "$OUT_IMAGE"
+
+    echo '# combine video+watermark and audio'
+    time ffmpeg -y -loglevel warning -i "$IN_FILE" -i "$OUT_IMAGE" -filter_complex "overlay=W-w-10:10" -i "$OUT_AUDIO" -codec:v prores -map 2:a:0 -codec:a copy "$OUT_VIDEO_AUDIO"
+
+fi
+
+if [ ! -f "$OUT_PIC" ]; then
+    echo Create "$OUT_PIC" and run again to finalize video
+else
+
+    if [ -f "$SCORE_PIC" ]; then
+	###############################################################
+	# append score to beginning and picture to the end of the video
+	###############################################################
+	echo '# append score to beginning and picture to the end of the video'
+	time ffmpeg -loglevel warning -y \
+	       -loop 1 -t ${SCORE_SECONDS} -i "$SCORE_PIC" \
+	       -f lavfi -t ${SCORE_SECONDS} -i anullsrc \
+	       -i "$OUT_VIDEO_AUDIO" \
+	       -loop 1 -t ${PICTURE_SECONDS} -i "$OUT_PIC" \
+	       -f lavfi -t ${PICTURE_SECONDS} -i anullsrc \
+	       -filter_complex "[0:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2',setdar=16/9[i];[3:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2',setdar=16/9[j];[i][1:a][2:v][2:a][j][4:a] concat=n=3:v=1:a=1[v][a]" -pix_fmt yuv420p -movflags +faststart -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
+    else
+	########################################
+	# append picture to the end of the video
+	########################################
+
+	echo '# append picture to the end of the video'
+	time ffmpeg -loglevel warning -y \
+	       -i "$OUT_VIDEO_AUDIO" \
+	       -loop 1 -t ${PICTURE_SECONDS} -i "$OUT_PIC" -f lavfi -t ${PICTURE_SECONDS} -i anullsrc \
+	       -filter_complex "[1:v]scale=1920x1080:force_original_aspect_ratio=decrease,pad=1920:1080:'(ow-iw)/2':'(oh-ih)/2',setdar=16/9[i];[0:v][0:a][i][2:a] concat=n=2:v=1:a=1[v][a]" -pix_fmt yuv420p -movflags +faststart -c:v libx264 -c:a aac -vsync 2 -map "[v]" -map "[a]" "$OUT_VIDEO"
+    fi
+    ########################################
+    # cleanup
+    ########################################
+
+    echo '# remove temporary files'
+    rm -f "$OUT_AUDIO" "$OUT_IMAGE" "$OUT_VIDEO_AUDIO"
+
+fi

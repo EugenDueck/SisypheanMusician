@@ -16,6 +16,7 @@ IN_ROOT := src
 OUT_ROOT := bin
 
 IN_DIR := $(IN_ROOT)/$(YEAR)/$(MONTH)
+IN_MD_FILE := $(IN_DIR)/$(DATE).md
 IN_MID_FILE := $(IN_DIR)/$(DATE).mid
 
 IN_ROOT := src
@@ -26,8 +27,7 @@ MIDI_DEVICE := $(shell arecordmidi -l|sed -nre 's/^\s*(\S+)\s*Roland Digital Pia
 in-dir:
 	mkdir -p $(IN_DIR)
 
-record-mid:
-	mkdir -p $(IN_DIR)
+record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
 
 score-png:
@@ -77,9 +77,15 @@ play-mid-keyboard:
 play-mp4:
 	mpv --fs $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).mp4
 
+md: in-dir
+	echo '# Day $(DAY_NO): ' > $(IN_MD_FILE)
+	emacs -nw $(IN_MD_FILE)
+
+
+git-commit: IN_MD_FIRST_LINE := $(shell head -1 $(IN_MD_FILE))
 git-commit:
 	git add src
-	git commit -m '$(YEAR)/$(MONTH)/$(DAY) - Day $(DAY_NO)'
+	git commit -m '$(YEAR)/$(MONTH)/$(DAY) $(IN_MD_FIRST_LINE)'
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

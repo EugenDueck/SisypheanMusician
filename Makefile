@@ -31,9 +31,9 @@ out-dir:
 	mkdir -p $(OUT_DIR)
 
 adb-pull-image: out-dir
-	adb-pull-last-image 1 $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png
-	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png >/devnull 2>/dev/null
-	rm $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png~
+	adb-pull-last-image 1 $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg
+	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg >/devnull 2>/dev/null
+	rm $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg~
 
 record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)

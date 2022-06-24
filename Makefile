@@ -27,6 +27,14 @@ MIDI_DEVICE := $(shell arecordmidi -l|sed -nre 's/^\s*(\S+)\s*Roland Digital Pia
 in-dir:
 	mkdir -p $(IN_DIR)
 
+out-dir:
+	mkdir -p $(OUT_DIR)
+
+adb-pull-image: out-dir
+	adb-pull-last-image 1 $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png
+	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png >/devnull 2>/dev/null
+	rm $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.png~
+
 record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
 
@@ -52,17 +60,14 @@ watermark:
 	ffmpeg -y -loglevel warning -i "$(VIDEO)" -i "$(DATE_DASH).png" -filter_complex "overlay=W-w-10:10" -codec:v prores -codec:a copy "$(basename $(VIDEO)).watermark.mov"
 	rm "$(DATE_DASH).png"
 
-render-mid:
-	mkdir -p $(OUT_DIR)
+render-mid: out-dir
 	scripts/render-mid $(IN_DIR) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
-render-wav:
-	mkdir -p $(OUT_DIR)
+render-wav: out-dir
 	scripts/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
-render-mov:
+render-mov: out-dir
 	test $(VIDEO)
-	mkdir -p $(OUT_DIR)
 	scripts/render-mov $(VIDEO) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
 play-mid-timidity:

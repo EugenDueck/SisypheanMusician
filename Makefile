@@ -32,7 +32,7 @@ out-dir:
 
 adb-pull-image: out-dir
 	adb-pull-last-image 1 $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg
-	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg >/devnull 2>/dev/null
+	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg >/dev/null 2>/dev/null
 	rm $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg~
 
 record-mid: in-dir

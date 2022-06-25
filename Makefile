@@ -38,6 +38,12 @@ adb-pull-image: out-dir
 record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
 
+edit-mid:
+	midicsv $(IN_MID_FILE) $(IN_DIR)/$(DATE).csv
+	emacs -nw $(IN_DIR)/$(DATE).csv
+	csvmidi $(IN_DIR)/$(DATE).csv $(IN_MID_FILE)
+	rm $(IN_DIR)/$(DATE).csv
+
 score-png:
 	test $(SCORE)
 	musescore3 $(SCORE) -o $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).score.png -T 20
@@ -86,11 +92,9 @@ md: in-dir
 	echo '# Day $(DAY_NO): ' > $(IN_MD_FILE)
 	emacs -nw $(IN_MD_FILE)
 
-
-git-commit: IN_MD_FIRST_LINE := $(shell head -1 $(IN_MD_FILE))
 git-commit:
 	git add src
-	git commit -m '$(YEAR)/$(MONTH)/$(DAY) $(IN_MD_FIRST_LINE)'
+	git commit -m '$(YEAR)/$(MONTH)/$(DAY) $(shell head -1 $(IN_MD_FILE))
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

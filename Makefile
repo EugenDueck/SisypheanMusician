@@ -92,6 +92,7 @@ md: in-dir
 	echo '# Day $(DAY_NO): ' > $(IN_MD_FILE)
 	emacs -nw $(IN_MD_FILE)
 	rm $(IN_MD_FILE)~
+	echo $(IN_MD_FILE)
 
 git-commit: IN_MD_FIRST_LINE := $(shell head -1 $(IN_MD_FILE))
 git-commit:

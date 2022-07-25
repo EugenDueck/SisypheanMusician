@@ -34,6 +34,7 @@ adb-pull-image: out-dir
 	adb-pull-last-image 1 $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg
 	krita $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg >/dev/null 2>/dev/null
 	rm $(OUT_DIR)/$(YEAR)$(MONTH)$(DAY).pic.jpg~
+	pkill adb
 
 record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)

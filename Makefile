@@ -39,9 +39,9 @@ adb-pull-image: out-dir
 record-mid: in-dir
 	arecordmidi -p $(MIDI_DEVICE) $(IN_MID_FILE)
 
-edit-mid:
+fix-mid:
 	midicsv $(IN_MID_FILE) $(IN_DIR)/$(DATE).csv
-	emacs -nw $(IN_DIR)/$(DATE).csv
+	sed -i -re '/^1, 0, Note_o(n|ff)_c/d' $(IN_DIR)/$(DATE).csv
 	csvmidi $(IN_DIR)/$(DATE).csv $(IN_MID_FILE)
 	rm $(IN_DIR)/$(DATE).csv
 

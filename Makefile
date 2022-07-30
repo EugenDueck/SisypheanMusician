@@ -73,9 +73,19 @@ render-mid: out-dir
 render-wav: out-dir
 	scripts/render-wav $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
 
+mount-zoom:
+	mountpoint -q /media/eugen/Q4N_SD || mount /media/eugen/Q4N_SD
+
+copy-last-zoom: mount-zoom
+	zoom-cp-last-recording-to $(YEAR)$(MONTH)$(DAY).mov
+
+remove-zoom: mount-zoom
+	rm /media/eugen/Q4N_SD/DCIM/100_ZOOM/*.MOV
+	umount /media/eugen/Q4N_SD
+
 render-mov: out-dir
-	test $(VIDEO)
-	scripts/render-mov $(VIDEO) $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	scripts/render-mov $(YEAR)$(MONTH)$(DAY).mov $(OUT_DIR) $(YEAR) $(MONTH) $(DAY)
+	rm $(YEAR)$(MONTH)$(DAY).mov
 
 play-mid-timidity:
 	timidity $(IN_MID_FILE)
@@ -98,7 +108,7 @@ md: in-dir
 git-commit: IN_MD_FIRST_LINE := $(shell head -1 $(IN_MD_FILE))
 git-commit:
 	git add src
-	git commit -m "$(YEAR)/$(MONTH)/$(DAY) $(IN_MD_FIRST_LINE)"
+	echo '$(YEAR)/$(MONTH)/$(DAY) $(IN_MD_FIRST_LINE)' | git commit -F -
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:

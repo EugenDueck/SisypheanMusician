@@ -105,10 +105,9 @@ md: in-dir
 	rm $(IN_MD_FILE)~
 	echo $(IN_MD_FILE)
 
-git-commit: IN_MD_FIRST_LINE := $(shell head -1 $(IN_MD_FILE))
 git-commit:
 	git add src
-	echo '$(YEAR)/$(MONTH)/$(DAY) $(IN_MD_FIRST_LINE)' | git commit -F -
+	(echo -n '$(YEAR)/$(MONTH)/$(DAY) '; head -1 $(IN_MD_FILE)) | git commit -F -
 
 tag: LAST_GIT_COMMIT_DATE := $(shell git log -1 --format=%cs $(IN_ROOT))
 tag:
